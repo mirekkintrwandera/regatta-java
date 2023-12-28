@@ -1,5 +1,6 @@
 code:
-- "**/**.java"
+- changed-files:
+  - any-glob-to-any-file: "**/**.java"
 docs:
-- "docs/**"
-- "README.md"
+- changed-files:
+  - any-glob-to-any-file: ["docs/**", "README.md"]

@@ -1,5 +1,5 @@
 val protocVersion = "3.24.1"
-val grpcVersion = "1.57.2"
+val grpcVersion = "1.60.1"
 
 plugins {
     // Apply the java-library plugin for API and implementation separation.

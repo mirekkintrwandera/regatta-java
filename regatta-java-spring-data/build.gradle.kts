@@ -1,3 +1,7 @@
+val springDataVersion = "3.2.0"
+val springContextSupportVersion = "6.1.2"
+val jacksonVersion = "2.16.1"
+
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
@@ -13,13 +17,13 @@ repositories {
 }
 
 dependencies {
-    api("org.springframework.data:spring-data-keyvalue:3.2.0")
-    api("org.springframework:spring-context-support:6.1.2")
+    api("org.springframework.data:spring-data-keyvalue:$springDataVersion")
+    api("org.springframework:spring-context-support:$springContextSupportVersion")
     api(project(mapOf("path" to ":regatta-java-core")))
 
-    implementation("com.fasterxml.jackson.core:jackson-core:2.16.0")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.16.0")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.16.0")
+    implementation("com.fasterxml.jackson.core:jackson-core:$jacksonVersion")
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:$jacksonVersion")
 }
 
 testing {

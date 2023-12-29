@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 package com.jamf.regatta.core.impl;
 
 import com.jamf.regatta.core.Client;

@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 package com.jamf.regatta.data.configuration;
 
 import com.jamf.regatta.data.query.RegattaQueryCreator;

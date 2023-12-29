@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 package com.jamf.regatta.data.example.repository;
 
 import com.jamf.regatta.data.example.entity.TestEntity;

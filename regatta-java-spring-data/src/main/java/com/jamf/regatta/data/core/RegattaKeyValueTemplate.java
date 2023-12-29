@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 package com.jamf.regatta.data.core;
 
 import org.springframework.data.keyvalue.core.IdentifierGenerator;

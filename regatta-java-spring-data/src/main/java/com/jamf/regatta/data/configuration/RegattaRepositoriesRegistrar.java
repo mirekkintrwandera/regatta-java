@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 package com.jamf.regatta.data.configuration;
 
 import org.springframework.data.repository.config.RepositoryBeanDefinitionRegistrarSupport;

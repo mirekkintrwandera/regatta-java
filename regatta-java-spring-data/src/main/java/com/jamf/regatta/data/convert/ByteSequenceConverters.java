@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 package com.jamf.regatta.data.convert;
 
 import com.jamf.regatta.core.api.ByteSequence;

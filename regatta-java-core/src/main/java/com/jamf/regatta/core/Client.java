@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 package com.jamf.regatta.core;
 
 public interface Client extends AutoCloseable {

@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 package com.jamf.regatta.data.repository;
 
 import org.springframework.data.keyvalue.core.KeyValueOperations;

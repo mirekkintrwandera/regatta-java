@@ -1,4 +1,4 @@
-val grpcVersion = "1.60.1"
+val grpcVersion = "1.61.0"
 val protobufVersion = "3.25.1"
 val slf4jVersion = "2.0.9"
 

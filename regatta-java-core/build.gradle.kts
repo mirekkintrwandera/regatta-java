@@ -1,6 +1,6 @@
 val grpcVersion = "1.61.0"
 val protobufVersion = "3.25.1"
-val slf4jVersion = "2.0.9"
+val slf4jVersion = "2.0.10"
 
 plugins {
     // Apply the java-library plugin for API and implementation separation.

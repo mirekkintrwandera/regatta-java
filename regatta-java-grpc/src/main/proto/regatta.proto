@@ -13,11 +13,15 @@ option java_multiple_files = true;
 package regatta.v1;
 
 import "mvcc.proto";
+import "google/protobuf/struct.proto";
 
 // KV for handling the read/put requests
 service KV {
   // Range gets the keys in the range from the key-value store.
   rpc Range(RangeRequest) returns (RangeResponse);
+
+  // IterateRange gets the keys in the range from the key-value store.
+  rpc IterateRange(RangeRequest) returns (stream RangeResponse);
 
   // Put puts the given key into the key-value store.
   rpc Put(PutRequest) returns (PutResponse);
@@ -195,12 +199,13 @@ service Cluster {
 
   // Status gets the status of the member.
   rpc Status(StatusRequest) returns (StatusResponse);
-
 }
 
 message MemberListRequest {}
 
 message MemberListResponse {
+  // cluster is a name of the cluster.
+  string cluster = 1;
   // members is a list of all members associated with the cluster.
   repeated Member members = 2;
 }
@@ -231,7 +236,10 @@ message TableStatus {
   uint64 raftAppliedIndex = 7;
 }
 
-message StatusRequest {}
+message StatusRequest {
+  // config controls if the configuration values should be fetched as well.
+  bool config = 4;
+}
 
 message StatusResponse {
   // id is the member ID of this member.
@@ -242,6 +250,64 @@ message StatusResponse {
   string info = 3;
   // tables is a status of tables of the responding member.
   map<string, TableStatus> tables = 4;
+  // config the node configuration values.
+  google.protobuf.Struct config = 5;
   // errors contains alarm/health information and status.
   repeated string errors = 8;
+}
+
+
+// API for managing tables.
+service Tables {
+  // Create a table. All followers will automatically replicate the table.
+  // This procedure is available only in the leader cluster.
+  rpc Create(CreateTableRequest) returns (CreateTableResponse);
+
+  // Delete a table. All followers will automatically delete the table.
+  // This procedure is available only in the leader cluster.
+  rpc Delete(DeleteTableRequest) returns (DeleteTableResponse);
+
+  // Get names of all the tables present in the cluster.
+  // This procedure is available in both leader and follower clusters.
+  rpc List(GetTableRequest) returns (GetTablesResponse);
+}
+
+// CreateTableRequest describes the table to be created.
+message CreateTableRequest {
+  // Name of the table to be created.
+  bytes name = 1;
+  // config the table configuration values.
+  google.protobuf.Struct config = 5;
+}
+
+// CreateTableResponse describes the newly created table.
+message CreateTableResponse {
+  // Shard ID the created table.
+  uint64 shard_id = 1;
+  // config the table configuration values.
+  google.protobuf.Struct config = 5;
+}
+
+// DeleteTableRequest describes the table to be deleted.
+message DeleteTableRequest {
+  // Name of the table to be deleted.
+  bytes table = 1;
+}
+
+message DeleteTableResponse {}
+
+message GetTableRequest {}
+
+// TableInfo describes a single table.
+message TableInfo {
+  // Name of the table.
+  bytes table = 1;
+
+  // Shard ID of the table.
+  uint64 shard_id = 2;
+}
+
+// FollowerGetTablesResponse contains information about tables stored in the cluster.
+message GetTablesResponse {
+  repeated TableInfo tables = 1;
 }

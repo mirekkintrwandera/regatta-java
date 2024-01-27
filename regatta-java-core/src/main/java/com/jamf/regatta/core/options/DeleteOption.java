@@ -7,6 +7,7 @@ package com.jamf.regatta.core.options;
 import com.jamf.regatta.core.api.ByteSequence;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public final class DeleteOption {
     public static final DeleteOption DEFAULT = builder().build();
@@ -14,11 +15,15 @@ public final class DeleteOption {
     private final ByteSequence endKey;
     private final boolean prevKV;
     private final boolean prefix;
+    private final long timeout;
+    private final TimeUnit timeoutUnit;
 
-    private DeleteOption(ByteSequence endKey, boolean prevKV, boolean prefix) {
+    private DeleteOption(ByteSequence endKey, boolean prevKV, boolean prefix, long timeout, TimeUnit timeoutUnit) {
         this.endKey = endKey;
         this.prevKV = prevKV;
         this.prefix = prefix;
+        this.timeout = timeout;
+        this.timeoutUnit = timeoutUnit;
     }
 
     public static Builder builder() {
@@ -42,10 +47,20 @@ public final class DeleteOption {
         return prefix;
     }
 
+    public long getTimeout() {
+        return timeout;
+    }
+
+    public TimeUnit getTimeoutUnit() {
+        return timeoutUnit;
+    }
+
     public static final class Builder {
         private ByteSequence endKey;
         private boolean prevKV = false;
         private boolean prefix = false;
+        private long timeout = 30;
+        private TimeUnit timeoutUnit = TimeUnit.SECONDS;
 
         private Builder() {
         }
@@ -97,8 +112,21 @@ public final class DeleteOption {
             return this;
         }
 
+        /**
+         * Sets the operation timeout.
+         *
+         * @param amount timeout value.
+         * @param unit   unit for value provided.
+         * @return builder
+         */
+        public Builder withTimeout(long amount, TimeUnit unit) {
+            this.timeout = amount;
+            this.timeoutUnit = unit;
+            return this;
+        }
+
         public DeleteOption build() {
-            return new DeleteOption(endKey, prevKV, prefix);
+            return new DeleteOption(this.endKey, this.prevKV, this.prefix, this.timeout, this.timeoutUnit);
         }
 
     }

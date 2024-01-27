@@ -11,4 +11,6 @@ public interface Client extends AutoCloseable {
     }
 
     KV getKVClient();
+
+    Cluster getClusterClient();
 }

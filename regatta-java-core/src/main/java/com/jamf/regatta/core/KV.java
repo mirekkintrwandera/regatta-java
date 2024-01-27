@@ -12,6 +12,8 @@ import com.jamf.regatta.core.options.DeleteOption;
 import com.jamf.regatta.core.options.GetOption;
 import com.jamf.regatta.core.options.PutOption;
 
+import java.util.stream.Stream;
+
 public interface KV extends CloseableClient {
 
     /**
@@ -51,6 +53,15 @@ public interface KV extends CloseableClient {
      * @return GetResponse
      */
     GetResponse get(ByteSequence table, ByteSequence key, GetOption option);
+
+    /**
+     * retrieve values for the given keys.
+     *
+     * @param table table in ByteSequence
+     * @param key   key in ByteSequence
+     * @return Stream of responses
+     */
+    Stream<GetResponse> iterate(ByteSequence table, ByteSequence key, GetOption option);
 
     /**
      * delete value with given key.

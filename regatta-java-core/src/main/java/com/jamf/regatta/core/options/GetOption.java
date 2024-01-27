@@ -7,6 +7,7 @@ package com.jamf.regatta.core.options;
 import com.jamf.regatta.core.api.ByteSequence;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The option for get operation.
@@ -23,6 +24,8 @@ public final class GetOption {
     private final boolean keysOnly;
     private final boolean countOnly;
     private final boolean prefix;
+    private final long timeout;
+    private final TimeUnit timeoutUnit;
 
     private GetOption(
             ByteSequence endKey,
@@ -33,7 +36,7 @@ public final class GetOption {
             boolean serializable,
             boolean keysOnly,
             boolean countOnly,
-            boolean prefix) {
+            boolean prefix, long timeout, TimeUnit timeoutUnit) {
 
         this.endKey = endKey;
         this.limit = limit;
@@ -44,6 +47,8 @@ public final class GetOption {
         this.keysOnly = keysOnly;
         this.countOnly = countOnly;
         this.prefix = prefix;
+        this.timeout = timeout;
+        this.timeoutUnit = timeoutUnit;
     }
 
     public static Builder builder() {
@@ -91,6 +96,14 @@ public final class GetOption {
         return prefix;
     }
 
+    public long getTimeout() {
+        return timeout;
+    }
+
+    public TimeUnit getTimeoutUnit() {
+        return timeoutUnit;
+    }
+
     public enum SortOrder {
         NONE, ASCEND, DESCEND,
     }
@@ -110,6 +123,8 @@ public final class GetOption {
         private boolean countOnly = false;
         private ByteSequence endKey;
         private boolean prefix = false;
+        private long timeout = 30;
+        private TimeUnit timeoutUnit = TimeUnit.SECONDS;
 
         private Builder() {
         }
@@ -238,21 +253,36 @@ public final class GetOption {
         }
 
         /**
+         * Sets the operation timeout.
+         *
+         * @param amount timeout value.
+         * @param unit   unit for value provided.
+         * @return builder
+         */
+        public Builder withTimeout(long amount, TimeUnit unit) {
+            this.timeout = amount;
+            this.timeoutUnit = unit;
+            return this;
+        }
+
+        /**
          * Build the GetOption.
          *
          * @return the GetOption
          */
         public GetOption build() {
             return new GetOption(
-                    endKey,
-                    limit,
-                    revision,
-                    sortOrder,
-                    sortTarget,
-                    serializable,
-                    keysOnly,
-                    countOnly,
-                    prefix);
+                    this.endKey,
+                    this.limit,
+                    this.revision,
+                    this.sortOrder,
+                    this.sortTarget,
+                    this.serializable,
+                    this.keysOnly,
+                    this.countOnly,
+                    this.prefix,
+                    this.timeout,
+                    this.timeoutUnit);
         }
 
     }

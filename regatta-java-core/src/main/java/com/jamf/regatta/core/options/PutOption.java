@@ -4,6 +4,8 @@
 
 package com.jamf.regatta.core.options;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.google.common.base.Preconditions.checkArgument;
 
 /**
@@ -14,22 +16,14 @@ public final class PutOption {
 
     private final long leaseId;
     private final boolean prevKV;
+    private final long timeout;
+    private final TimeUnit timeoutUnit;
 
-    private PutOption(long leaseId, boolean prevKV) {
+    private PutOption(long leaseId, boolean prevKV, long timeout, TimeUnit timeoutUnit) {
         this.leaseId = leaseId;
         this.prevKV = prevKV;
-    }
-
-    /**
-     * Returns the builder.
-     *
-     * @return the builder
-     * @deprecated use {@link #builder()}
-     */
-    @SuppressWarnings("InlineMeSuggester")
-    @Deprecated
-    public static Builder newBuilder() {
-        return builder();
+        this.timeout = timeout;
+        this.timeoutUnit = timeoutUnit;
     }
 
     public static Builder builder() {
@@ -54,6 +48,14 @@ public final class PutOption {
         return this.prevKV;
     }
 
+    public long getTimeout() {
+        return timeout;
+    }
+
+    public TimeUnit getTimeoutUnit() {
+        return timeoutUnit;
+    }
+
     /**
      * Builder to construct a put option.
      */
@@ -61,6 +63,8 @@ public final class PutOption {
 
         private long leaseId = 0L;
         private boolean prevKV = false;
+        private long timeout = 30;
+        private TimeUnit timeoutUnit = TimeUnit.SECONDS;
 
         private Builder() {
         }
@@ -89,12 +93,25 @@ public final class PutOption {
         }
 
         /**
+         * Sets the operation timeout.
+         *
+         * @param amount timeout value.
+         * @param unit   unit for value provided.
+         * @return builder
+         */
+        public Builder withTimeout(long amount, TimeUnit unit) {
+            this.timeout = amount;
+            this.timeoutUnit = unit;
+            return this;
+        }
+
+        /**
          * build the put option.
          *
          * @return the put option
          */
         public PutOption build() {
-            return new PutOption(this.leaseId, this.prevKV);
+            return new PutOption(this.leaseId, this.prevKV, this.timeout, this.timeoutUnit);
         }
 
     }

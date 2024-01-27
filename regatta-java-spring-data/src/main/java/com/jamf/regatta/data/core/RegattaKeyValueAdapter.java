@@ -13,7 +13,6 @@ import com.jamf.regatta.core.options.DeleteOption;
 import com.jamf.regatta.core.options.GetOption;
 import com.jamf.regatta.core.options.PutOption;
 import com.jamf.regatta.data.convert.RegattaConverter;
-import com.jamf.regatta.data.query.RegattaQueryCreator;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -26,6 +25,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class RegattaKeyValueAdapter extends AbstractKeyValueAdapter implements InitializingBean, ApplicationContextAware {
+
+    private static final ByteSequence KEY_ALL = ByteSequence.from(new byte[]{0});
 
     private final RegattaConverter converter;
     private final KV kv;
@@ -107,8 +108,10 @@ public class RegattaKeyValueAdapter extends AbstractKeyValueAdapter implements I
     @Override
     public <T> Iterable<T> getAllOf(String keyspace, Class<T> type) {
         var table = converter.write(keyspace);
-        var response = kv.get(table, ByteSequence.from(new byte[]{0}), GetOption.builder().withRange(ByteSequence.from(new byte[]{0})).build());
-        return () -> response.kvs().stream().map(keyValue -> converter.read(keyValue.value(), type)).iterator();
+        return () -> kv.iterate(table, KEY_ALL, GetOption.builder().withRange(KEY_ALL).build())
+                .flatMap(getResponse -> getResponse.kvs().stream())
+                .map(keyValue -> converter.read(keyValue.value(), type))
+                .iterator();
     }
 
     @Override
@@ -119,15 +122,16 @@ public class RegattaKeyValueAdapter extends AbstractKeyValueAdapter implements I
     @Override
     public <T> CloseableIterator<Map.Entry<Object, T>> entries(String keyspace, Class<T> type) {
         var table = converter.write(keyspace);
-        var response = kv.get(table, ByteSequence.from(new byte[]{0}), GetOption.builder().withRange(ByteSequence.from(new byte[]{0})).build());
-        Map<Object, T> collect = response.kvs().stream().collect(Collectors.toMap(KeyValue::key, keyValue -> converter.read(keyValue.value(), type)));
+        Map<Object, T> collect = kv.iterate(table, KEY_ALL, GetOption.builder().withRange(KEY_ALL).build())
+                .flatMap(getResponse -> getResponse.kvs().stream())
+                .collect(Collectors.toMap(KeyValue::key, keyValue -> converter.read(keyValue.value(), type)));
         return new ForwardingCloseableIterator<>(collect.entrySet().iterator());
     }
 
     @Override
     public void deleteAllOf(String keyspace) {
         var table = converter.write(keyspace);
-        kv.delete(table, ByteSequence.from(new byte[]{0}), DeleteOption.builder().withRange(ByteSequence.from(new byte[]{0})).build());
+        kv.delete(table, KEY_ALL, DeleteOption.builder().withRange(KEY_ALL).build());
     }
 
     @Override
@@ -138,7 +142,7 @@ public class RegattaKeyValueAdapter extends AbstractKeyValueAdapter implements I
     @Override
     public long count(String keyspace) {
         var table = converter.write(keyspace);
-        var response = kv.get(table, ByteSequence.from(new byte[]{0}), GetOption.builder().withRange(ByteSequence.from(new byte[]{0})).withCountOnly(true).build());
+        var response = kv.get(table, KEY_ALL, GetOption.builder().withRange(KEY_ALL).withCountOnly(true).build());
         return response.count();
     }
 

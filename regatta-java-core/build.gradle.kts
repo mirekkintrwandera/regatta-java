@@ -3,18 +3,11 @@ val protobufVersion = "3.25.1"
 val slf4jVersion = "2.0.11"
 
 plugins {
-    // Apply the java-library plugin for API and implementation separation.
-    `java-library`
-    `maven-publish`
+    id("regatta.library-conventions")
 }
 
 group = "com.jamf.regatta"
 version = "1.0.0-SNAPSHOT"
-
-repositories {
-    // Use Maven Central for resolving dependencies.
-    mavenCentral()
-}
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
@@ -28,39 +21,4 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("org.slf4j:slf4j-api:${slf4jVersion}")
     implementation("org.slf4j:slf4j-jdk14:${slf4jVersion}")
-}
-
-testing {
-    suites {
-        // Configure the built-in test suite
-        val test by getting(JvmTestSuite::class) {
-            // Use JUnit Jupiter test framework
-            useJUnitJupiter("5.9.3")
-        }
-    }
-}
-
-publishing {
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/jamf/regatta-java")
-            credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
-            }
-        }
-    }
-    publications {
-        register<MavenPublication>("library") {
-            from(components["java"])
-        }
-    }
-}
-
-// Apply a specific Java toolchain to ease working on different environments.
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
 }

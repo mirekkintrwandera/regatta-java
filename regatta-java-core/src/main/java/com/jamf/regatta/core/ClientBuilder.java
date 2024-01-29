@@ -5,8 +5,12 @@
 package com.jamf.regatta.core;
 
 import com.google.common.base.Strings;
+import com.jamf.regatta.core.encoding.SnappyCodec;
 import com.jamf.regatta.core.impl.ClientImpl;
 import io.grpc.ClientInterceptor;
+import io.grpc.Codec;
+import io.grpc.CompressorRegistry;
+import io.grpc.DecompressorRegistry;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NegotiationType;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
@@ -127,6 +131,16 @@ public class ClientBuilder {
         if (interceptors != null) {
             channelBuilder.intercept(interceptors);
         }
+
+        var compressorRegistry = CompressorRegistry.newEmptyInstance();
+        compressorRegistry.register(Codec.Identity.NONE);
+        compressorRegistry.register(SnappyCodec.INSTANCE);
+        channelBuilder.compressorRegistry(compressorRegistry);
+
+        var decompressorRegistry = DecompressorRegistry.emptyInstance()
+                .with(Codec.Identity.NONE, false)
+                .with(SnappyCodec.INSTANCE, true);
+        channelBuilder.decompressorRegistry(decompressorRegistry);
 
         return new ClientImpl(channelBuilder.build());
     }

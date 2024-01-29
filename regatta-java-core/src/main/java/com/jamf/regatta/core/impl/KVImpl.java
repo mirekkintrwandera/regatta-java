@@ -7,6 +7,7 @@ package com.jamf.regatta.core.impl;
 import com.google.protobuf.ByteString;
 import com.jamf.regatta.core.KV;
 import com.jamf.regatta.core.api.*;
+import com.jamf.regatta.core.encoding.SnappyCodec;
 import com.jamf.regatta.core.options.DeleteOption;
 import com.jamf.regatta.core.options.GetOption;
 import com.jamf.regatta.core.options.PutOption;
@@ -27,7 +28,7 @@ public class KVImpl implements KV {
     private final KVGrpc.KVBlockingStub stub;
 
     KVImpl(Channel managedChannel) {
-        stub = KVGrpc.newBlockingStub(managedChannel);
+        stub = KVGrpc.newBlockingStub(managedChannel).withCompression(SnappyCodec.NAME);
     }
 
     @Override

@@ -19,7 +19,6 @@ import io.grpc.Channel;
 
 import java.util.Spliterator;
 import java.util.Spliterators;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 

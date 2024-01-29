@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 pluginManagement {
     repositories {
         gradlePluginPortal()

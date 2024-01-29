@@ -1,6 +1,11 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 val grpcVersion = "1.61.0"
 val protobufVersion = "3.25.2"
 val slf4jVersion = "2.0.11"
+val snappyVersion = "1.1.10.5"
 
 plugins {
     id("regatta.library-conventions")
@@ -21,4 +26,5 @@ dependencies {
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("org.slf4j:slf4j-api:${slf4jVersion}")
     implementation("org.slf4j:slf4j-jdk14:${slf4jVersion}")
+    implementation("org.xerial.snappy:snappy-java:${snappyVersion}")
 }

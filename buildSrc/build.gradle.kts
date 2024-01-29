@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 plugins {
     `kotlin-dsl`
 }

@@ -1,5 +1,5 @@
 val grpcVersion = "1.61.0"
-val protobufVersion = "3.25.1"
+val protobufVersion = "3.25.2"
 val slf4jVersion = "2.0.11"
 
 plugins {

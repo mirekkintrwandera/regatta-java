@@ -1,11 +1,10 @@
 plugins {
-    `application`
+    application
     id("org.springframework.boot") version "3.2.2"
     id("io.spring.dependency-management") version "1.1.4"
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
     mavenLocal()
 }
@@ -13,7 +12,7 @@ repositories {
 dependencies {
     implementation("org.springframework.data:spring-data-keyvalue")
     implementation("org.springframework.boot:spring-boot-starter")
-    implementation(project(mapOf("path" to ":regatta-java-spring-data")))
+    implementation("com.jamf.regatta:regatta-java-spring-data")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 plugins {
     `java-library`
     `maven-publish`

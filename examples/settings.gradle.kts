@@ -1,3 +1,7 @@
+/*
+ * Copyright JAMF Software, LLC
+ */
+
 rootProject.name = "regatta-java.examples"
 include("spring-data-example")
 

@@ -25,6 +25,5 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("org.slf4j:slf4j-api:${slf4jVersion}")
-    implementation("org.slf4j:slf4j-jdk14:${slf4jVersion}")
     implementation("org.xerial.snappy:snappy-java:${snappyVersion}")
 }

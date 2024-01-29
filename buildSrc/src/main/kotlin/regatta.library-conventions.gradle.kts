@@ -29,6 +29,14 @@ java {
 publishing {
     repositories {
         maven {
+            name = "OSSRH"
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+            credentials {
+                username = project.findProperty("ossrh.user") as String? ?: System.getenv("MAVEN_USERNAME")
+                password = project.findProperty("ossrh.user") as String? ?: System.getenv("MAVEN_PASSWORD")
+            }
+        }
+        maven {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/jamf/regatta-java")
             credentials {

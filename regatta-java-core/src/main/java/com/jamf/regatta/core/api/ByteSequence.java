@@ -25,6 +25,42 @@ public final class ByteSequence {
         this.hashVal = byteString.hashCode();
     }
 
+    public static ByteSequence fromUtf8String(String source) {
+        return new ByteSequence(ByteString.copyFromUtf8(source));
+    }
+
+    /**
+     * Create new ByteSequence from a String.
+     *
+     * @param source  input String
+     * @param charset the character set to use to transform the String into bytes
+     * @return the ByteSequence
+     */
+    public static ByteSequence from(String source, Charset charset) {
+        byte[] bytes = source.getBytes(charset);
+        return new ByteSequence(ByteString.copyFrom(bytes));
+    }
+
+    /**
+     * Create new ByteSequence from a {@link ByteString}.
+     *
+     * @param source input {@link ByteString}
+     * @return the ByteSequence
+     */
+    public static ByteSequence from(ByteString source) {
+        return new ByteSequence(source);
+    }
+
+    /**
+     * Create new ByteSequence from raw bytes.
+     *
+     * @param source input bytes
+     * @return the ByteSequence
+     */
+    public static ByteSequence from(byte[] source) {
+        return new ByteSequence(ByteString.copyFrom(source));
+    }
+
     /**
      * Tests if this <code>ByteSequence</code> starts with the specified prefix.
      *
@@ -129,41 +165,5 @@ public final class ByteSequence {
     @Override
     public String toString() {
         return byteString.toStringUtf8();
-    }
-
-    public static ByteSequence fromUtf8String(String source) {
-        return new ByteSequence(ByteString.copyFromUtf8(source));
-    }
-
-    /**
-     * Create new ByteSequence from a String.
-     *
-     * @param  source  input String
-     * @param  charset the character set to use to transform the String into bytes
-     * @return         the ByteSequence
-     */
-    public static ByteSequence from(String source, Charset charset) {
-        byte[] bytes = source.getBytes(charset);
-        return new ByteSequence(ByteString.copyFrom(bytes));
-    }
-
-    /**
-     * Create new ByteSequence from a {@link ByteString}.
-     *
-     * @param  source input {@link ByteString}
-     * @return        the ByteSequence
-     */
-    public static ByteSequence from(ByteString source) {
-        return new ByteSequence(source);
-    }
-
-    /**
-     * Create new ByteSequence from raw bytes.
-     *
-     * @param  source input bytes
-     * @return        the ByteSequence
-     */
-    public static ByteSequence from(byte[] source) {
-        return new ByteSequence(ByteString.copyFrom(source));
     }
 }

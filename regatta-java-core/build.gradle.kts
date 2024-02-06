@@ -12,7 +12,7 @@ plugins {
 }
 
 group = "com.jamf.regatta"
-version = "1.0.0"
+version = "1.0.1-SNAPSHOT"
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.

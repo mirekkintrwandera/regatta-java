@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.jamf.regatta"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 dependencies {
     implementation("io.grpc:grpc-protobuf:${grpcVersion}")

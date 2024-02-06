@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "com.jamf.regatta"
-version = "1.0.0-SNAPSHOT"
+version = "1.0.0"
 
 dependencies {
     api("org.springframework.data:spring-data-keyvalue:$springDataVersion")

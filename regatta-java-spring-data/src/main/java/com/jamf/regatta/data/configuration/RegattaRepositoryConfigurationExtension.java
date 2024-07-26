@@ -52,7 +52,7 @@ public class RegattaRepositoryConfigurationExtension extends KeyValueRepositoryC
 
     @Override
     public void registerBeansForRoot(BeanDefinitionRegistry registry, RepositoryConfigurationSource configuration) {
-        registerIfNotAlreadyRegistered(() -> BeanDefinitionBuilder.rootBeanDefinition(ObjectMapper.class).setPrimary(true).getBeanDefinition(), registry, REGATTA_OBJECT_MAPPER_BEAN_NAME,
+        registerIfNotAlreadyRegistered(() -> BeanDefinitionBuilder.rootBeanDefinition(ObjectMapper.class).getBeanDefinition(), registry, REGATTA_OBJECT_MAPPER_BEAN_NAME,
                 configuration.getSource());
         registerIfNotAlreadyRegistered(() -> BeanDefinitionBuilder.rootBeanDefinition(XmlMapper.class).getBeanDefinition(), registry, REGATTA_XML_MAPPER_BEAN_NAME,
                 configuration.getSource());

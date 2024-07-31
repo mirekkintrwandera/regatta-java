@@ -37,6 +37,7 @@ public class JksSSLFactoryRefresher implements SSLFactoryRefresher {
         this.trustStorePath = trustStorePath;
         this.identityStorePassword = identityStorePassword;
         this.trustStorePassword = trustStorePassword;
+        this.tryRefresh();
     }
 
     public void tryRefresh() {

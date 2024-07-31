@@ -15,21 +15,24 @@ import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NegotiationType;
 import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import io.grpc.netty.shaded.io.netty.channel.ChannelOption;
-import io.grpc.netty.shaded.io.netty.handler.ssl.util.InsecureTrustManagerFactory;
+import io.grpc.netty.shaded.io.netty.handler.ssl.SslContextBuilder;
+import io.grpc.netty.shaded.io.netty.handler.ssl.SupportedCipherSuiteFilter;
+import nl.altindag.ssl.SSLFactory;
 
 import javax.net.ssl.SSLException;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class ClientBuilder {
 
     private String target;
-    private boolean insecureSkipTLSVerify;
     private Duration connectTimeout;
     private NegotiationType negotiationType;
     private List<ClientInterceptor> interceptors;
+    private SSLFactory sslFactory;
 
     ClientBuilder() {
     }
@@ -46,16 +49,6 @@ public class ClientBuilder {
 
         this.target = target;
 
-        return this;
-    }
-
-    /**
-     * Configure if TLS cert verification should be skipped
-     *
-     * @return this builder
-     */
-    public ClientBuilder insecureSkipTLSVerify(boolean insecureSkipTLSVerify) {
-        this.insecureSkipTLSVerify = insecureSkipTLSVerify;
         return this;
     }
 
@@ -85,6 +78,18 @@ public class ClientBuilder {
      */
     public ClientBuilder negotiationType(NegotiationType negotiationType) {
         this.negotiationType = negotiationType;
+
+        return this;
+    }
+
+    /**
+     * Override SSLFactory, used in case of NegotiationType.TLS
+     *
+     * @param sslFactory SSLFactory
+     * @return this builder
+     */
+    public ClientBuilder sslFactory(SSLFactory sslFactory) {
+        this.sslFactory = sslFactory;
 
         return this;
     }
@@ -120,8 +125,9 @@ public class ClientBuilder {
         if (negotiationType != null) {
             channelBuilder.negotiationType(negotiationType);
         }
-        if (insecureSkipTLSVerify) {
-            channelBuilder.sslContext(GrpcSslContexts.forClient().trustManager(InsecureTrustManagerFactory.INSTANCE).build());
+
+        if (Objects.equals(negotiationType, NegotiationType.TLS) && sslFactory != null) {
+            channelBuilder.sslContext(GrpcSslContexts.configure(toSslContextBuilder(sslFactory)).build());
         }
 
         if (connectTimeout != null) {
@@ -143,5 +149,14 @@ public class ClientBuilder {
         channelBuilder.decompressorRegistry(decompressorRegistry);
 
         return new ClientImpl(channelBuilder.build());
+    }
+
+    private static SslContextBuilder toSslContextBuilder(SSLFactory sslFactory) {
+        SslContextBuilder sslContextBuilder = SslContextBuilder.forClient()
+                .ciphers(sslFactory.getCiphers(), SupportedCipherSuiteFilter.INSTANCE)
+                .protocols(sslFactory.getProtocols());
+        sslFactory.getKeyManager().ifPresent(sslContextBuilder::keyManager);
+        sslFactory.getTrustManager().ifPresent(sslContextBuilder::trustManager);
+        return sslContextBuilder;
     }
 }

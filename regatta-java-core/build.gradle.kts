@@ -25,6 +25,7 @@ dependencies {
     api("io.grpc:grpc-core:${grpcVersion}")
     api("io.grpc:grpc-stub:${grpcVersion}")
     api("io.grpc:grpc-netty-shaded:${grpcVersion}")
+    api("io.github.hakky54:sslcontext-kickstart:${sslContextVersion}")
 
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.

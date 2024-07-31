@@ -6,6 +6,7 @@ val grpcVersion = "1.63.0"
 val protobufVersion = "3.25.2"
 val slf4jVersion = "2.0.13"
 val snappyVersion = "1.1.10.5"
+val sslContextVersion = "8.3.6"
 val jupiterVersion = "5.10.2"
 val grpcTestingVersion = "1.63.0"
 val assertjVersion = "3.25.3"
@@ -28,6 +29,9 @@ dependencies {
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("org.slf4j:slf4j-api:${slf4jVersion}")
+    implementation("org.xerial.snappy:snappy-java:${snappyVersion}")
+    implementation("io.github.hakky54:sslcontext-kickstart-for-netty:${sslContextVersion}")
+    implementation("io.github.hakky54:sslcontext-kickstart-for-pem:${sslContextVersion}")
     implementation("org.xerial.snappy:snappy-java:${snappyVersion}")
 
     testImplementation("org.assertj:assertj-core:${assertjVersion}")

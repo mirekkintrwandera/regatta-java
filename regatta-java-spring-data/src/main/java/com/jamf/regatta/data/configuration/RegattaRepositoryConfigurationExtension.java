@@ -22,10 +22,11 @@ import java.util.Collections;
 
 public class RegattaRepositoryConfigurationExtension extends KeyValueRepositoryConfigurationExtension {
 
+    public static final String REGATTA_OBJECT_MAPPER_BEAN_NAME = "regattaObjectMapper";
+    public static final String REGATTA_XML_MAPPER_BEAN_NAME = "regattaXmlMapper";
+
     private static final String REGATTA_ADAPTER_BEAN_NAME = "regattaKeyValueAdapter";
     private static final String REGATTA_CONVERTER_BEAN_NAME = "regattaConverter";
-    private static final String REGATTA_OBJECT_MAPPER_BEAN_NAME = "regattaObjectMapper";
-    private static final String REGATTA_XML_MAPPER_BEAN_NAME = "regattaXmlMapper";
     private static final String REGATTA_CLIENT_BEAN_NAME = "regattaClient";
 
     @Override

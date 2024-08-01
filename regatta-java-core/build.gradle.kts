@@ -2,20 +2,20 @@
  * Copyright JAMF Software, LLC
  */
 
-val grpcVersion = "1.63.0"
-val protobufVersion = "3.25.2"
+val grpcVersion = "1.65.1"
+val protobufVersion = "3.25.4"
 val slf4jVersion = "2.0.13"
 val snappyVersion = "1.1.10.5"
-val jupiterVersion = "5.10.2"
-val grpcTestingVersion = "1.63.0"
-val assertjVersion = "3.25.3"
+val sslContextVersion = "8.3.6"
+val jupiterVersion = "5.10.3"
+val assertjVersion = "3.26.3"
 
 plugins {
     id("regatta.library-conventions")
 }
 
 group = "com.jamf.regatta"
-version = "1.1.1-SNAPSHOT"
+version = "1.2.0-SNAPSHOT"
 
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
@@ -24,14 +24,18 @@ dependencies {
     api("io.grpc:grpc-core:${grpcVersion}")
     api("io.grpc:grpc-stub:${grpcVersion}")
     api("io.grpc:grpc-netty-shaded:${grpcVersion}")
+    api("io.github.hakky54:sslcontext-kickstart:${sslContextVersion}")
 
 
     // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation("org.slf4j:slf4j-api:${slf4jVersion}")
     implementation("org.xerial.snappy:snappy-java:${snappyVersion}")
+    implementation("io.github.hakky54:sslcontext-kickstart-for-netty:${sslContextVersion}")
+    implementation("io.github.hakky54:sslcontext-kickstart-for-pem:${sslContextVersion}")
+    implementation("org.xerial.snappy:snappy-java:${snappyVersion}")
 
     testImplementation("org.assertj:assertj-core:${assertjVersion}")
-    testImplementation("io.grpc:grpc-testing:${grpcTestingVersion}")
+    testImplementation("io.grpc:grpc-testing:${grpcVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${jupiterVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-migrationsupport:${jupiterVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${jupiterVersion}")

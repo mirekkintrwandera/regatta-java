@@ -69,7 +69,7 @@ public class PemSSLFactoryRefresher implements SSLFactoryRefresher {
                 }
             }
         } catch (IOException | RuntimeException e) {
-            LOGGER.error("Failed to refresh ssl material", e);
+            LOGGER.warn("Failed to refresh ssl material", e);
         }
     }
 

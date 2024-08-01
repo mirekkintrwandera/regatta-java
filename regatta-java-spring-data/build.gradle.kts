@@ -2,9 +2,9 @@
  * Copyright JAMF Software, LLC
  */
 
-val springDataVersion = "3.2.5"
-val springContextSupportVersion = "6.1.6"
-val jacksonVersion = "2.17.1"
+val springDataVersion = "3.3.2"
+val springContextSupportVersion = "6.1.11"
+val jacksonVersion = "2.17.2"
 
 plugins {
     id("regatta.library-conventions")

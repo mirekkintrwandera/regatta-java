@@ -4,7 +4,6 @@
 
 package com.jamf.regatta.data.convert;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.jamf.regatta.core.api.ByteSequence;
 import org.springframework.core.convert.TypeDescriptor;
@@ -22,12 +21,6 @@ public class XmlConverterFactory implements ConditionalGenericConverter {
         this.mapper = mapper;
     }
 
-    @Override
-    public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
-        return (isMarshallableType(targetType) && hasJsonValueType(sourceType))
-                || (isMarshallableType(sourceType) && hasJsonValueType(targetType));
-    }
-
     private static boolean isMarshallableType(TypeDescriptor targetType) {
         return targetType.isAssignableTo(TypeDescriptor.valueOf(byte[].class)) || targetType.isAssignableTo(TypeDescriptor.valueOf(ByteSequence.class));
     }
@@ -37,6 +30,12 @@ public class XmlConverterFactory implements ConditionalGenericConverter {
                 .map(RegattaValueMapping::value)
                 .map(type -> type == RegattaValueMapping.Type.XML)
                 .orElse(false);
+    }
+
+    @Override
+    public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
+        return (isMarshallableType(targetType) && hasJsonValueType(sourceType))
+                || (isMarshallableType(sourceType) && hasJsonValueType(targetType));
     }
 
     @Override

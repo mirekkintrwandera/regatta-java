@@ -21,12 +21,6 @@ public class JsonConverterFactory implements ConditionalGenericConverter {
         this.mapper = mapper;
     }
 
-    @Override
-    public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
-        return (isMarshallableType(targetType) && hasJsonValueType(sourceType))
-                || (isMarshallableType(sourceType) && hasJsonValueType(targetType));
-    }
-
     private static boolean isMarshallableType(TypeDescriptor targetType) {
         return targetType.isAssignableTo(TypeDescriptor.valueOf(byte[].class)) || targetType.isAssignableTo(TypeDescriptor.valueOf(ByteSequence.class));
     }
@@ -36,6 +30,12 @@ public class JsonConverterFactory implements ConditionalGenericConverter {
                 .map(RegattaValueMapping::value)
                 .map(type -> type == RegattaValueMapping.Type.JSON)
                 .orElse(false);
+    }
+
+    @Override
+    public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
+        return (isMarshallableType(targetType) && hasJsonValueType(sourceType))
+                || (isMarshallableType(sourceType) && hasJsonValueType(targetType));
     }
 
     @Override

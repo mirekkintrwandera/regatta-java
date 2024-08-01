@@ -10,6 +10,15 @@ import org.springframework.core.convert.converter.Converter;
 import java.util.List;
 
 public class ByteSequenceConverters {
+    public static List<Converter<?, ?>> converters() {
+        return List.of(
+                new ByteSequenceToStringConverter(),
+                new StringToByteSequenceConverter(),
+                new ByteSequenceToBytesConverter(),
+                new BytesToByteSequenceConverter()
+        );
+    }
+
     private static class ByteSequenceToStringConverter implements Converter<ByteSequence, String> {
         @Override
         public String convert(ByteSequence source) {
@@ -36,14 +45,5 @@ public class ByteSequenceConverters {
         public ByteSequence convert(byte[] source) {
             return ByteSequence.from(source);
         }
-    }
-
-    public static List<Converter<?,?>> converters() {
-        return List.of(
-                new ByteSequenceToStringConverter(),
-                new StringToByteSequenceConverter(),
-                new ByteSequenceToBytesConverter(),
-                new BytesToByteSequenceConverter()
-        );
     }
 }

@@ -9,15 +9,17 @@ import com.jamf.regatta.core.Cluster;
 import com.jamf.regatta.core.KV;
 import com.jamf.regatta.core.Tables;
 
-import io.grpc.Channel;
+import io.grpc.ManagedChannel;
 
 public final class ClientImpl implements Client {
 
     private final KV kvClient;
     private final Cluster clusterClient;
     private final Tables tables;
+    private final ManagedChannel channel;
 
-    public ClientImpl(Channel channel) {
+    public ClientImpl(ManagedChannel channel) {
+        this.channel = channel;
         this.kvClient = new KVImpl(channel);
         this.clusterClient = new ClusterImpl(channel);
 		this.tables = new TablesImpl(channel);
@@ -40,6 +42,6 @@ public final class ClientImpl implements Client {
 
     @Override
     public void close() throws Exception {
-        kvClient.close();
+        channel.shutdown();
     }
 }

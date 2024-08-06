@@ -13,8 +13,6 @@ import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 
 public class RegattaRepositoryFactory extends KeyValueRepositoryFactory {
 
-    private final KeyValueOperations operations;
-
     public RegattaRepositoryFactory(KeyValueOperations keyValueOperations) {
         this(keyValueOperations, RegattaQueryCreator.class);
     }
@@ -27,7 +25,5 @@ public class RegattaRepositoryFactory extends KeyValueRepositoryFactory {
     public RegattaRepositoryFactory(KeyValueOperations keyValueOperations,
                                     Class<? extends AbstractQueryCreator<?, ?>> queryCreator, Class<? extends RepositoryQuery> repositoryQueryType) {
         super(keyValueOperations, queryCreator, repositoryQueryType);
-
-        this.operations = keyValueOperations;
     }
 }

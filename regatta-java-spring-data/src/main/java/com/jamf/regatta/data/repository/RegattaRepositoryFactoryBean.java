@@ -18,7 +18,8 @@ public class RegattaRepositoryFactoryBean<T extends Repository<S, ID>, S, ID> ex
 
     @Override
     protected RegattaRepositoryFactory createRepositoryFactory(KeyValueOperations operations,
-                                                               Class<? extends AbstractQueryCreator<?, ?>> queryCreator, Class<? extends RepositoryQuery> repositoryQueryType) {
+                                                               Class<? extends AbstractQueryCreator<?, ?>> queryCreator,
+                                                               Class<? extends RepositoryQuery> repositoryQueryType) {
         return new RegattaRepositoryFactory(operations, queryCreator, repositoryQueryType);
     }
 }

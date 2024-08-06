@@ -13,10 +13,7 @@ import com.jamf.regatta.core.api.TxnResponse;
 import com.jamf.regatta.core.api.*;
 import com.jamf.regatta.core.api.op.TxnImpl;
 import com.jamf.regatta.core.encoding.SnappyCodec;
-import com.jamf.regatta.core.options.DeleteOption;
-import com.jamf.regatta.core.options.GetOption;
-import com.jamf.regatta.core.options.PutOption;
-import com.jamf.regatta.core.options.TxnOption;
+import com.jamf.regatta.core.options.*;
 import com.jamf.regatta.proto.*;
 import io.grpc.Channel;
 
@@ -59,7 +56,10 @@ public class KVImpl implements KV {
         var request = RangeRequest.newBuilder()
                 .setTable(ByteString.copyFrom(table.getBytes()))
                 .setKey(ByteString.copyFrom(key.getBytes()))
-                .setRangeEnd(option.getEndKey().map(byteSequence -> ByteString.copyFrom(byteSequence.getBytes())).orElse(ByteString.EMPTY))
+                .setRangeEnd(option.getEndKey()
+                        .map(byteSequence -> ByteString.copyFrom(byteSequence.getBytes()))
+                        .orElseGet(() -> option.isPrefix() ? ByteString.copyFrom(OptionsUtil.prefixEndOf(key).getBytes()) : ByteString.EMPTY)
+                )
                 .setLimit(option.getLimit())
                 .setCountOnly(option.isCountOnly())
                 .setKeysOnly(option.isKeysOnly())
@@ -71,11 +71,20 @@ public class KVImpl implements KV {
         return new GetResponse(new Response.HeaderImpl(get.getHeader()), kvs, get.getCount());
     }
 
+    @Override
+    public Stream<GetResponse> iterate(ByteSequence table, ByteSequence key) {
+        return iterate(table, key, GetOption.DEFAULT);
+    }
+
+    @Override
     public Stream<GetResponse> iterate(ByteSequence table, ByteSequence key, GetOption option) {
         var request = RangeRequest.newBuilder()
                 .setTable(ByteString.copyFrom(table.getBytes()))
                 .setKey(ByteString.copyFrom(key.getBytes()))
-                .setRangeEnd(option.getEndKey().map(byteSequence -> ByteString.copyFrom(byteSequence.getBytes())).orElse(ByteString.EMPTY))
+                .setRangeEnd(option.getEndKey()
+                        .map(byteSequence -> ByteString.copyFrom(byteSequence.getBytes()))
+                        .orElseGet(() -> option.isPrefix() ? ByteString.copyFrom(OptionsUtil.prefixEndOf(key).getBytes()) : ByteString.EMPTY)
+                )
                 .setLimit(option.getLimit())
                 .setCountOnly(option.isCountOnly())
                 .setKeysOnly(option.isKeysOnly())
@@ -101,7 +110,10 @@ public class KVImpl implements KV {
         var request = DeleteRangeRequest.newBuilder()
                 .setTable(ByteString.copyFrom(table.getBytes()))
                 .setKey(ByteString.copyFrom(key.getBytes()))
-                .setRangeEnd(option.getEndKey().map(byteSequence -> ByteString.copyFrom(byteSequence.getBytes())).orElse(ByteString.EMPTY))
+                .setRangeEnd(option.getEndKey()
+                        .map(byteSequence -> ByteString.copyFrom(byteSequence.getBytes()))
+                        .orElseGet(() -> option.isPrefix() ? ByteString.copyFrom(OptionsUtil.prefixEndOf(key).getBytes()) : ByteString.EMPTY)
+                )
                 .setPrevKv(option.isPrevKV())
                 .build();
 

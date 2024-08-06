@@ -8,6 +8,7 @@ import com.google.protobuf.ByteString;
 import com.jamf.regatta.core.api.ByteSequence;
 import com.jamf.regatta.core.options.DeleteOption;
 import com.jamf.regatta.core.options.GetOption;
+import com.jamf.regatta.core.options.OptionsUtil;
 import com.jamf.regatta.core.options.PutOption;
 import com.jamf.regatta.proto.RequestOp;
 
@@ -98,9 +99,13 @@ public abstract class Op {
     }
 
 
-    public static RequestOp.Range mapRangeRequest(ByteString key, GetOption option) {
+    private static RequestOp.Range mapRangeRequest(ByteString key, GetOption option) {
         return RequestOp.Range.newBuilder()
                 .setKey(key)
+                .setRangeEnd(option.getEndKey()
+                        .map(byteSequence -> ByteString.copyFrom(byteSequence.getBytes()))
+                        .orElseGet(() -> option.isPrefix() ? ByteString.copyFrom(OptionsUtil.prefixEndOf(ByteSequence.from(key)).getBytes()) : ByteString.EMPTY)
+                )
                 .setCountOnly(option.isCountOnly())
                 .setLimit(option.getLimit())
                 .setKeysOnly(option.isKeysOnly())
@@ -108,7 +113,7 @@ public abstract class Op {
 
     }
 
-    public static RequestOp.Put mapPutRequest(ByteString key, ByteString value, PutOption option) {
+    private static RequestOp.Put mapPutRequest(ByteString key, ByteString value, PutOption option) {
         return RequestOp.Put.newBuilder()
                 .setKey(key)
                 .setValue(value)
@@ -116,9 +121,13 @@ public abstract class Op {
                 .build();
     }
 
-    public static RequestOp.DeleteRange mapDeleteRequest(ByteString key, DeleteOption option) {
+    private static RequestOp.DeleteRange mapDeleteRequest(ByteString key, DeleteOption option) {
         return RequestOp.DeleteRange.newBuilder()
                 .setKey(key)
+                .setRangeEnd(option.getEndKey()
+                        .map(byteSequence -> ByteString.copyFrom(byteSequence.getBytes()))
+                        .orElseGet(() -> option.isPrefix() ? ByteString.copyFrom(OptionsUtil.prefixEndOf(ByteSequence.from(key)).getBytes()) : ByteString.EMPTY)
+                )
                 .setPrevKv(option.isPrevKV())
                 .build();
     }

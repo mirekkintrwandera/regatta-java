@@ -59,6 +59,15 @@ public interface KV extends CloseableClient {
      * @param key   key in ByteSequence
      * @return Stream of responses
      */
+    Stream<GetResponse> iterate(ByteSequence table, ByteSequence key);
+
+    /**
+     * retrieve values for the given keys.
+     *
+     * @param table table in ByteSequence
+     * @param key   key in ByteSequence
+     * @return Stream of responses
+     */
     Stream<GetResponse> iterate(ByteSequence table, ByteSequence key, GetOption option);
 
     /**

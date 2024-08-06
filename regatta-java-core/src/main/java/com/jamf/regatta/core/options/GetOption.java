@@ -13,13 +13,11 @@ import java.util.concurrent.TimeUnit;
  * The option for get operation.
  */
 public final class GetOption {
+
     public static final GetOption DEFAULT = builder().build();
 
     private final ByteSequence endKey;
     private final long limit;
-    private final long revision;
-    private final SortOrder sortOrder;
-    private final SortTarget sortTarget;
     private final boolean serializable;
     private final boolean keysOnly;
     private final boolean countOnly;
@@ -30,9 +28,6 @@ public final class GetOption {
     private GetOption(
             ByteSequence endKey,
             long limit,
-            long revision,
-            SortOrder sortOrder,
-            SortTarget sortTarget,
             boolean serializable,
             boolean keysOnly,
             boolean countOnly,
@@ -40,9 +35,6 @@ public final class GetOption {
 
         this.endKey = endKey;
         this.limit = limit;
-        this.revision = revision;
-        this.sortOrder = sortOrder;
-        this.sortTarget = sortTarget;
         this.serializable = serializable;
         this.keysOnly = keysOnly;
         this.countOnly = countOnly;
@@ -68,18 +60,6 @@ public final class GetOption {
         return Optional.ofNullable(this.endKey);
     }
 
-    public long getRevision() {
-        return revision;
-    }
-
-    public SortOrder getSortOrder() {
-        return sortOrder;
-    }
-
-    public SortTarget getSortField() {
-        return sortTarget;
-    }
-
     public boolean isSerializable() {
         return serializable;
     }
@@ -103,21 +83,9 @@ public final class GetOption {
     public TimeUnit getTimeoutUnit() {
         return timeoutUnit;
     }
-
-    public enum SortOrder {
-        NONE, ASCEND, DESCEND,
-    }
-
-    public enum SortTarget {
-        KEY, VERSION, CREATE, MOD, VALUE,
-    }
-
     public static final class Builder {
 
         private long limit = 0L;
-        private long revision = 0L;
-        private SortOrder sortOrder = SortOrder.NONE;
-        private SortTarget sortTarget = SortTarget.KEY;
         private boolean serializable = false;
         private boolean keysOnly = false;
         private boolean countOnly = false;
@@ -137,45 +105,6 @@ public final class GetOption {
          */
         public Builder withLimit(long limit) {
             this.limit = limit;
-            return this;
-        }
-
-        /**
-         * Provide the revision to use for the get request.
-         *
-         * <p>
-         * If the revision is less or equal to zero, the get is over the newest key-value store.
-         *
-         * <p>
-         * If the revision has been compacted, ErrCompacted is returned as a response.
-         *
-         * @param revision the revision to get.
-         * @return builder
-         */
-        public Builder withRevision(long revision) {
-            this.revision = revision;
-            return this;
-        }
-
-        /**
-         * Sort the return key value pairs in the provided <i>order</i>.
-         *
-         * @param order order to sort the returned key value pairs.
-         * @return builder
-         */
-        public Builder withSortOrder(SortOrder order) {
-            this.sortOrder = order;
-            return this;
-        }
-
-        /**
-         * Sort the return key value pairs in the provided <i>field</i>.
-         *
-         * @param field field to sort the key value pairs by the provided
-         * @return builder
-         */
-        public Builder withSortField(SortTarget field) {
-            this.sortTarget = field;
             return this;
         }
 
@@ -274,9 +203,6 @@ public final class GetOption {
             return new GetOption(
                     this.endKey,
                     this.limit,
-                    this.revision,
-                    this.sortOrder,
-                    this.sortTarget,
                     this.serializable,
                     this.keysOnly,
                     this.countOnly,

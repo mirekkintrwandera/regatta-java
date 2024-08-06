@@ -4,13 +4,11 @@
 
 package com.jamf.regatta.core;
 
-import com.jamf.regatta.core.api.ByteSequence;
-import com.jamf.regatta.core.api.DeleteResponse;
-import com.jamf.regatta.core.api.GetResponse;
-import com.jamf.regatta.core.api.PutResponse;
+import com.jamf.regatta.core.api.*;
 import com.jamf.regatta.core.options.DeleteOption;
 import com.jamf.regatta.core.options.GetOption;
 import com.jamf.regatta.core.options.PutOption;
+import com.jamf.regatta.core.options.TxnOption;
 
 import java.util.stream.Stream;
 
@@ -80,4 +78,20 @@ public interface KV extends CloseableClient {
      * @return DeleteResponse
      */
     DeleteResponse delete(ByteSequence table, ByteSequence key, DeleteOption option);
+
+    /**
+     * creates a transaction.
+     *
+     * @param table table in ByteSequence
+     * @return a Txn
+     */
+    Txn txn(ByteSequence table);
+
+    /**
+     * creates a transaction.
+     *
+     * @param table table in ByteSequence
+     * @return a Txn
+     */
+    Txn txn(ByteSequence table, TxnOption option);
 }

@@ -6,15 +6,18 @@ package com.jamf.regatta.core.impl;
 
 import com.google.protobuf.ByteString;
 import com.jamf.regatta.core.KV;
+import com.jamf.regatta.core.api.KeyValue;
+import com.jamf.regatta.core.api.PutResponse;
+import com.jamf.regatta.core.api.Txn;
+import com.jamf.regatta.core.api.TxnResponse;
 import com.jamf.regatta.core.api.*;
+import com.jamf.regatta.core.api.op.TxnImpl;
 import com.jamf.regatta.core.encoding.SnappyCodec;
 import com.jamf.regatta.core.options.DeleteOption;
 import com.jamf.regatta.core.options.GetOption;
 import com.jamf.regatta.core.options.PutOption;
-import com.jamf.regatta.proto.DeleteRangeRequest;
-import com.jamf.regatta.proto.KVGrpc;
-import com.jamf.regatta.proto.PutRequest;
-import com.jamf.regatta.proto.RangeRequest;
+import com.jamf.regatta.core.options.TxnOption;
+import com.jamf.regatta.proto.*;
 import io.grpc.Channel;
 
 import java.util.Spliterator;
@@ -105,5 +108,20 @@ public class KVImpl implements KV {
         var delete = stub.withDeadlineAfter(option.getTimeout(), option.getTimeoutUnit()).deleteRange(request);
         var kvs = delete.getPrevKvsList().stream().map(keyValue -> new KeyValue(ByteSequence.from(keyValue.getKey()), ByteSequence.from(keyValue.getValue()))).toList();
         return new DeleteResponse(new Response.HeaderImpl(delete.getHeader()), kvs, delete.getDeleted());
+    }
+
+    @Override
+    public Txn txn(ByteSequence table) {
+        return txn(table, TxnOption.DEFAULT);
+    }
+
+    @Override
+    public Txn txn(ByteSequence table, TxnOption option) {
+        return TxnImpl.newTxn(request -> this.txn(request, option), table);
+    }
+
+    private TxnResponse txn(TxnRequest request, TxnOption option) {
+        var txnResult = stub.withDeadlineAfter(option.getTimeout(), option.getTimeoutUnit()).txn(request);
+        return new TxnResponse(new Response.HeaderImpl(txnResult.getHeader()), txnResult.getSucceeded(), txnResult.getResponsesList());
     }
 }

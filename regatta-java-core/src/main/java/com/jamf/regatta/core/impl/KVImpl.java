@@ -71,6 +71,12 @@ public class KVImpl implements KV {
         return new GetResponse(new Response.HeaderImpl(get.getHeader()), kvs, get.getCount());
     }
 
+    @Override
+    public Stream<GetResponse> iterate(ByteSequence table, ByteSequence key) {
+        return iterate(table, key, GetOption.DEFAULT);
+    }
+
+    @Override
     public Stream<GetResponse> iterate(ByteSequence table, ByteSequence key, GetOption option) {
         var request = RangeRequest.newBuilder()
                 .setTable(ByteString.copyFrom(table.getBytes()))

@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import com.jamf.regatta.core.ClientBuilder;
+import com.jamf.regatta.core.RetryConfig;
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +52,7 @@ class TablesImplTest {
 
 	@BeforeEach
 	void setUp() {
-		client = new TablesImpl(serverRule.getChannel());
+		client = new TablesImpl(serverRule.getChannel(), RetryConfig.NO_RETRY);
 	}
 
 	@Test

@@ -9,6 +9,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.function.Consumer;
 
+import com.jamf.regatta.core.ClientBuilder;
+import com.jamf.regatta.core.RetryConfig;
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +35,7 @@ class ClusterImplTest {
 
 	@BeforeEach
 	void setUp() {
-		client = new ClusterImpl(serverRule.getChannel());
+		client = new ClusterImpl(serverRule.getChannel(), RetryConfig.NO_RETRY);
 	}
 
 	@Test

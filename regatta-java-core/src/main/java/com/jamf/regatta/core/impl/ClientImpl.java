@@ -4,11 +4,7 @@
 
 package com.jamf.regatta.core.impl;
 
-import com.jamf.regatta.core.Client;
-import com.jamf.regatta.core.Cluster;
-import com.jamf.regatta.core.KV;
-import com.jamf.regatta.core.Tables;
-
+import com.jamf.regatta.core.*;
 import io.grpc.ManagedChannel;
 
 public final class ClientImpl implements Client {
@@ -18,12 +14,12 @@ public final class ClientImpl implements Client {
     private final Tables tables;
     private final ManagedChannel channel;
 
-    public ClientImpl(ManagedChannel channel) {
+    public ClientImpl(ManagedChannel channel, RetryConfig retryConfig) {
         this.channel = channel;
-        this.kvClient = new KVImpl(channel);
-        this.clusterClient = new ClusterImpl(channel);
-		this.tables = new TablesImpl(channel);
-	}
+        this.kvClient = new KVImpl(channel, retryConfig);
+        this.clusterClient = new ClusterImpl(channel, retryConfig);
+        this.tables = new TablesImpl(channel, retryConfig);
+    }
 
     @Override
     public KV getKVClient() {

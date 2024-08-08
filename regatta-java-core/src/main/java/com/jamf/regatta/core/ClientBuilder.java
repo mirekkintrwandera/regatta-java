@@ -21,6 +21,7 @@ import nl.altindag.ssl.SSLFactory;
 
 import javax.net.ssl.SSLException;
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +34,8 @@ public class ClientBuilder {
     private NegotiationType negotiationType;
     private List<ClientInterceptor> interceptors;
     private SSLFactory sslFactory;
+    private RetryConfig retryConfig = RetryConfig.DEFAULT;
+
 
     ClientBuilder() {
     }
@@ -90,7 +93,6 @@ public class ClientBuilder {
      */
     public ClientBuilder sslFactory(SSLFactory sslFactory) {
         this.sslFactory = sslFactory;
-
         return this;
     }
 
@@ -111,6 +113,22 @@ public class ClientBuilder {
 
         return this;
     }
+
+    /**
+     * The retry configuration. If not set the {@code RetryConfig.DEFAULT} is used.
+     *
+     * @param retryConfig The retry configuration.
+     * @return this builder
+     */
+    public ClientBuilder retry(RetryConfig retryConfig) {
+        Preconditions.checkArgument(retryConfig != null, "retryConfig can't be null");
+        Preconditions.checkArgument(retryConfig.unit() != null, "unit can't be null");
+        Preconditions.checkArgument(retryConfig.delay() <= 0, "delay must be greater than 0");
+        Preconditions.checkArgument(retryConfig.maxDelay() <= 0, "delay must be greater than 0");
+        this.retryConfig = retryConfig;
+        return this;
+    }
+
 
     /**
      * build a new Client.
@@ -147,8 +165,9 @@ public class ClientBuilder {
                 .with(Codec.Identity.NONE, false)
                 .with(SnappyCodec.INSTANCE, true);
         channelBuilder.decompressorRegistry(decompressorRegistry);
+        channelBuilder.defaultLoadBalancingPolicy("round_robin");
 
-        return new ClientImpl(channelBuilder.build());
+        return new ClientImpl(channelBuilder.build(), retryConfig);
     }
 
     private static SslContextBuilder toSslContextBuilder(SSLFactory sslFactory) {

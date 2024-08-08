@@ -16,7 +16,7 @@ plugins {
 }
 group = "com.jamf.regatta"
 
-version = "1.2.1-SNAPSHOT"
+version = "1.3.1-SNAPSHOT"
 dependencies {
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     api(project(":regatta-java-grpc"))

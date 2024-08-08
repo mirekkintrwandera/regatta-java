@@ -165,6 +165,7 @@ public class ClientBuilder {
                 .with(Codec.Identity.NONE, false)
                 .with(SnappyCodec.INSTANCE, true);
         channelBuilder.decompressorRegistry(decompressorRegistry);
+        channelBuilder.defaultLoadBalancingPolicy("round_robin");
 
         return new ClientImpl(channelBuilder.build(), retryConfig);
     }

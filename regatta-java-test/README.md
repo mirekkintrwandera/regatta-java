@@ -1,4 +1,4 @@
-# Regatta Java spring-data support
+# Regatta Java testing support
 
 ## Installation
 
@@ -10,8 +10,9 @@
 <dependencies>
     <dependency>
         <groupId>com.jamf.regatta</groupId>
-        <artifactId>regatta-java-spring-data</artifactId>
+        <artifactId>regatta-java-test</artifactId>
         <version>VERSION</version>
+        <scope>test</scope>
     </dependency>
 </dependencies>
 ```
@@ -20,6 +21,6 @@
 
 ```kotlin
 dependencies {
-    implementation("com.jamf.regatta:regatta-java-spring-data:VERSION")
+    testImplementation("com.jamf.regatta:regatta-java-test:VERSION")
 }
 ```

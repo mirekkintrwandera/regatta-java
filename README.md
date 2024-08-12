@@ -9,6 +9,7 @@ This repository hosts the code of [**Regatta**](https://engineering.jamf.com/reg
 * [regatta-java-grpc](./regatta-java-grpc)
 * [regatta-java-core](./regatta-java-core)
 * [regatta-java-spring-data](./regatta-java-spring-data)
+* [regatta-java-test](./regatta-java-test)
 
 Refer to individual project readme for instructions and documentation.
 

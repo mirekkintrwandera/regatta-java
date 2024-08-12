@@ -2,7 +2,7 @@ plugins {
     id("regatta.library-conventions")
 }
 
-val grpcVersion = "1.65.1"
+val grpcVersion = "1.66.0"
 val testContainersVersion = "1.20.1"
 val jupiterVersion = "5.10.3"
 val autoServiceVersion = "1.1.1"

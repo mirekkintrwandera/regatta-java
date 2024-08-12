@@ -2,7 +2,7 @@
  * Copyright JAMF Software, LLC
  */
 
-val grpcVersion = "1.65.1"
+val grpcVersion = "1.66.0"
 val protobufVersion = "3.25.4"
 val slf4jVersion = "2.0.13"
 val snappyVersion = "1.1.10.5"

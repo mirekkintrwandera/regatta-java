@@ -4,7 +4,7 @@
 
 val grpcVersion = "1.66.0"
 val protobufVersion = "3.25.4"
-val slf4jVersion = "2.0.13"
+val slf4jVersion = "2.0.16"
 val snappyVersion = "1.1.10.5"
 val sslContextVersion = "8.3.6"
 var autoServiceVersion = "1.1.1"

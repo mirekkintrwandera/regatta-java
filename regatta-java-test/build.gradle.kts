@@ -9,7 +9,7 @@ val autoServiceVersion = "1.1.1"
 
 group = "com.jamf.regatta"
 
-version = "1.3.1-SNAPSHOT"
+version = "1.4.1-SNAPSHOT"
 
 dependencies {
     api("io.grpc:grpc-core:${grpcVersion}")

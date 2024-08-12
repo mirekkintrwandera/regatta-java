@@ -18,3 +18,4 @@ rootProject.name = "regatta-java"
 include("regatta-java-grpc")
 include("regatta-java-core")
 include("regatta-java-spring-data")
+include("regatta-java-test")

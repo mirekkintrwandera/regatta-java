@@ -7,6 +7,7 @@ val protobufVersion = "3.25.4"
 val slf4jVersion = "2.0.13"
 val snappyVersion = "1.1.10.5"
 val sslContextVersion = "8.3.6"
+var autoServiceVersion = "1.1.1"
 val failsafeVersion = "3.3.2"
 val jupiterVersion = "5.10.3"
 val assertjVersion = "3.26.3"
@@ -34,6 +35,9 @@ dependencies {
     implementation("io.github.hakky54:sslcontext-kickstart-for-pem:${sslContextVersion}")
     implementation("org.xerial.snappy:snappy-java:${snappyVersion}")
     implementation("dev.failsafe:failsafe:${failsafeVersion}")
+    implementation("com.google.auto.service:auto-service-annotations:${autoServiceVersion}")
+
+    annotationProcessor("com.google.auto.service:auto-service:${autoServiceVersion}")
 
     testImplementation("org.assertj:assertj-core:${assertjVersion}")
     testImplementation("io.grpc:grpc-testing:${grpcVersion}")

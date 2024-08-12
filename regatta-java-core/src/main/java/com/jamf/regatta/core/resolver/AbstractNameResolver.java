@@ -37,7 +37,7 @@ public abstract class AbstractNameResolver extends NameResolver {
     public AbstractNameResolver(URI targetUri) {
         this.lock = new Object();
         this.targetUri = targetUri;
-        this.authority = MoreObjects.fisrtNonNull(targetUri.getAuthority(), "");
+        this.authority = targetUri.getAuthority() != null ? targetUri.getAuthority() : "";
     }
 
     public URI getTargetUri() {

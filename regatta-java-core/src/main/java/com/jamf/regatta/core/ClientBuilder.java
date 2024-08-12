@@ -136,7 +136,7 @@ public class ClientBuilder {
      * @return Client instance.
      */
     public Client build() throws SSLException {
-        Preconditions.checkState(target != null, "please configure etcd server endpoints before build.");
+        Preconditions.checkState(target != null, "please configure regatta server endpoints before build.");
 
         NettyChannelBuilder channelBuilder = NettyChannelBuilder.forTarget(target);
 

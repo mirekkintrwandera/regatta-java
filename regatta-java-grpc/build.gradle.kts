@@ -3,7 +3,7 @@
  */
 
 val protocVersion = "3.25.4"
-val grpcVersion = "1.65.1"
+val grpcVersion = "1.66.0"
 val javaxAnnotationVersion = "1.3.2"
 
 plugins {

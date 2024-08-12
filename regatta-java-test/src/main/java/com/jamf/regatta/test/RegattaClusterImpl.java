@@ -40,7 +40,7 @@ public class RegattaClusterImpl implements RegattaCluster {
         this.containers = endpoints.stream()
                 .map(e -> new RegattaContainer(image, e, endpoints)
                         .withClusterName(clusterName)
-                        .withSll(ssl)
+                        .withSsl(ssl)
                         .withAdditionalArgs(additionalArgs)
                         .withNetwork(network)
                         .withShouldMountDataDirectory(shouldMountDataDirectory)

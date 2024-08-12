@@ -18,6 +18,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("com.jamf.regatta:regatta-java-spring-data")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("com.jamf.regatta:regatta-java-test")
 }
 
 testing {

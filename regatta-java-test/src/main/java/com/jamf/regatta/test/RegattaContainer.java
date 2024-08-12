@@ -54,7 +54,7 @@ public class RegattaContainer extends GenericContainer<RegattaContainer> {
         this.nodes.add(node);
     }
 
-    public RegattaContainer withSll(boolean ssl) {
+    public RegattaContainer withSsl(boolean ssl) {
         this.ssl = ssl;
         return self();
     }
@@ -174,14 +174,14 @@ public class RegattaContainer extends GenericContainer<RegattaContainer> {
                     SelinuxContext.SHARED);
 
             withClasspathResourceMapping(
-                    "ssl/cert/" + node + "-key.pem", "/etc/ssl/regatta/server-key.pem",
+                    "ssl/cert/" + node + ".key", "/etc/ssl/regatta/server.key",
                     BindMode.READ_ONLY,
                     SelinuxContext.SHARED);
 
             cmd.add("--cert-file");
             cmd.add("/etc/ssl/regatta/server.pem");
             cmd.add("--key-file");
-            cmd.add("/etc/ssl/regatta/server-key.pem");
+            cmd.add("/etc/ssl/regatta/server.key");
         }
 
         if (nodes.size() > 1) {

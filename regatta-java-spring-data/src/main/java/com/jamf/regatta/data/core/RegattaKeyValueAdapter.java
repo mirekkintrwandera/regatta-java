@@ -9,9 +9,15 @@ import com.jamf.regatta.core.KV;
 import com.jamf.regatta.core.api.ByteSequence;
 import com.jamf.regatta.core.api.GetResponse;
 import com.jamf.regatta.core.api.KeyValue;
+import com.jamf.regatta.core.api.Txn;
+import com.jamf.regatta.core.api.op.Cmp;
+import com.jamf.regatta.core.api.op.CmpTarget;
+import com.jamf.regatta.core.api.op.Op;
 import com.jamf.regatta.core.options.DeleteOption;
 import com.jamf.regatta.core.options.GetOption;
 import com.jamf.regatta.core.options.PutOption;
+import com.jamf.regatta.data.convert.IndexEntry;
+import com.jamf.regatta.data.convert.SecondaryIndexProvider;
 import com.jamf.regatta.data.convert.RegattaConverter;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -51,7 +57,19 @@ public class RegattaKeyValueAdapter extends AbstractKeyValueAdapter implements I
         var table = converter.write(keyspace);
         var key = converter.write(id);
         var value = converter.write(item);
-        kv.put(table, key, value, PutOption.DEFAULT);
+
+        if (item instanceof SecondaryIndexProvider entity) {
+            Txn transaction = kv.txn(table);
+            transaction.Then(Op.PutOp.put(key, value, PutOption.DEFAULT));
+            for (IndexEntry entry : entity.secondaryIndexes()) {
+                var secondaryIndexKey = converter.write(entry.indexPrefix() + "/" + entry.value());
+                transaction.Then(Op.PutOp.put(secondaryIndexKey, key, PutOption.DEFAULT));
+            }
+            transaction.commit();
+        } else {
+            kv.put(table, key, value, PutOption.DEFAULT);
+        }
+
         return null;
     }
 
@@ -90,11 +108,26 @@ public class RegattaKeyValueAdapter extends AbstractKeyValueAdapter implements I
     @Override
     public <T> T delete(Object id, String keyspace, Class<T> type) {
         var table = converter.write(keyspace);
-        var key = converter.write(id);
+        T entityToDelete = this.get(id, keyspace, type);
 
-        var resp = kv.delete(table, key, DeleteOption.builder().withPrevKV(true).build());
-        if (resp.deleted() > 0) {
-            return converter.read(resp.prevKv().get(0).value(), type);
+        if (entityToDelete instanceof SecondaryIndexProvider entity) {
+            Txn transaction = kv.txn(table);
+            for (IndexEntry entry : entity.secondaryIndexes()) {
+                var secondaryIndexKey = converter.write(entry.indexPrefix() + "/" + entry.value());
+                transaction.Then(Op.DeleteOp.delete(secondaryIndexKey, DeleteOption.DEFAULT));
+            }
+            var prefixedKey = converter.write(entity.primaryKey().indexPrefix() + "/" + id);
+            Cmp primaryKeyComparator = new Cmp(converter.write(entity.primaryKey().indexPrefix() + "/" + entity.primaryKey().value()),
+                    Cmp.Op.EQUAL, CmpTarget.value(prefixedKey));
+            transaction.If(primaryKeyComparator)
+                    .Then(Op.DeleteOp.delete(prefixedKey, DeleteOption.builder().withPrevKV(true).build()));
+            transaction.commit();
+        } else {
+            var key = converter.write(id);
+            var resp = kv.delete(table, key, DeleteOption.builder().withPrevKV(true).build());
+            if (resp.deleted() > 0) {
+                return entityToDelete;
+            }
         }
         return null;
 

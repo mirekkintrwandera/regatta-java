@@ -55,18 +55,19 @@ public class RegattaKeyValueAdapter extends AbstractKeyValueAdapter implements I
     @Override
     public Object put(Object id, Object item, String keyspace) {
         var table = converter.write(keyspace);
-        var key = converter.write(id);
         var value = converter.write(item);
 
         if (item instanceof SecondaryIndexProvider entity) {
             Txn transaction = kv.txn(table);
-            transaction.Then(Op.PutOp.put(key, value, PutOption.DEFAULT));
+            var primaryKey = converter.write(entity.primaryKey().indexPrefix() + "/" + entity.primaryKey().value())
+            transaction.Then(Op.PutOp.put(primaryKey, value, PutOption.DEFAULT));
             for (IndexEntry entry : entity.secondaryIndexes()) {
                 var secondaryIndexKey = converter.write(entry.indexPrefix() + "/" + entry.value());
-                transaction.Then(Op.PutOp.put(secondaryIndexKey, key, PutOption.DEFAULT));
+                transaction.Then(Op.PutOp.put(secondaryIndexKey, primaryKey, PutOption.DEFAULT));
             }
             transaction.commit();
         } else {
+            var key = converter.write(id);
             kv.put(table, key, value, PutOption.DEFAULT);
         }
 
